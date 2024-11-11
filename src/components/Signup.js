@@ -1,33 +1,47 @@
-// src/components/Signup.js
 import React, { useState } from 'react';
 import { auth, db } from '../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
+import './Signup.css';
 
 const Signup = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const validatePasswords = () => {
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return false;
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    if (!validatePasswords()) {
+      return;
+    }
+
     try {
-      // Create user authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Store additional user data in Firestore
       await setDoc(doc(db, 'users', userCredential.user.uid), {
         firstName,
         lastName,
         email,
         createdAt: new Date().toISOString()
       });
-
-      navigate('/login'); // Redirect to login page after successful registration
+      navigate('/login');
     } catch (error) {
       setError(error.message);
       console.error('Signup error:', error);
@@ -35,63 +49,77 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up for DEV@Deakin</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">First Name</label>
+    <div className="signup-container">
+      <div className="signup-form-container">
+        <h2 className="signup-title">Sign Up for DEV@Deakin</h2>
+        {error && <div className="error-message">{error}</div>}
+        
+        <form onSubmit={handleSubmit} className="signup-form">
+          <div className="form-group">
+            <label className="form-label">First Name</label>
             <input
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="form-input"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Last Name</label>
+
+          <div className="form-group">
+            <label className="form-label">Last Name</label>
             <input
               type="text"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="form-input"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Email</label>
+
+          <div className="form-group">
+            <label className="form-label">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="form-input"
               required
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2">Password</label>
+
+          <div className="form-group">
+            <label className="form-label">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="form-input"
               required
+              minLength={6}
             />
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-          >
+
+          <div className="form-group">
+            <label className="form-label">Confirm Password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="form-input"
+              required
+              minLength={6}
+            />
+          </div>
+
+          <button type="submit" className="submit-button">
             Sign Up
           </button>
         </form>
-        <p className="mt-4 text-center">
+
+        <p className="login-link">
           Already have an account?{' '}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Login
-          </Link>
+          <Link to="/login" className="link">Login</Link>
         </p>
       </div>
     </div>
