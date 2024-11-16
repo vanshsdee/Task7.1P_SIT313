@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth, db } from '../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Signup.css';
 
 const Signup = () => {
@@ -12,7 +12,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validatePasswords = () => {
     if (password !== confirmPassword) {
@@ -29,10 +29,13 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
     if (!validatePasswords()) {
       return;
     }
 
+    setIsSubmitting(true);
+    
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, 'users', userCredential.user.uid), {
@@ -40,11 +43,13 @@ const Signup = () => {
         lastName,
         email,
         createdAt: new Date().toISOString()
-      });
-      navigate('/login');
+      });      
+      
     } catch (error) {
       setError(error.message);
       console.error('Signup error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -57,63 +62,34 @@ const Signup = () => {
         <form onSubmit={handleSubmit} className="signup-form">
           <div className="form-group">
             <label className="form-label">First Name</label>
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="form-input"
-              required
-            />
+            <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="form-input" required />
           </div>
 
           <div className="form-group">
             <label className="form-label">Last Name</label>
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="form-input"
-              required
-            />
+            <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="form-input" required />
           </div>
 
           <div className="form-group">
             <label className="form-label">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="form-input"
-              required
-            />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="form-input" required />
           </div>
 
           <div className="form-group">
             <label className="form-label">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-input"
-              required
-              minLength={6}
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="form-input" requiredminLength={6} />
           </div>
 
           <div className="form-group">
             <label className="form-label">Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="form-input"
-              required
-              minLength={6}
-            />
+            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="form-input" required minLength={6} />
           </div>
 
-          <button type="submit" className="submit-button">
-            Sign Up
+          <button 
+            type="submit" 
+            className="submit-button"
+          >
+            {isSubmitting ? 'Signed up successfully!' : 'Sign Up'}
           </button>
         </form>
 
