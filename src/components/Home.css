@@ -1,0 +1,130 @@
+.home-container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+  }
+  
+  .nav-bar {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .nav-items {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+  }
+  
+  .logo h1 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #1f2937;
+    white-space: nowrap;
+  }
+  
+  .search-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0 2rem;
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .search-container {
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  
+  .search-input:focus {
+    border-color: #3b82f6;
+  }
+  
+  .post-button {
+    padding: 0.5rem 1rem;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+  
+  .post-button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .auth-button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: white;
+    color: #4b5563;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-width: 80px;
+    white-space: nowrap;
+  }
+  
+  .auth-button:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .main-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  .welcome-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .welcome-text {
+    color: #4b5563;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .nav-items {
+      flex-direction: column;
+      height: auto;
+      padding: 1rem 0;
+      gap: 1rem;
+    }
+  
+    .search-section {
+      width: 100%;
+      margin: 1rem 0;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .search-section {
+      flex-direction: column;
+    }
+    
+    .post-button {
+      width: 100%;
+    }
+  }
